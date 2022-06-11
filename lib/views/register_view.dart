@@ -35,59 +35,53 @@ class _RegisterViewState extends State<RegisterView> {
       appBar: AppBar(
         title: const Text('Register'),
       ),
-      body: FutureBuilder(
-          future: Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform,
+      body: Column(
+        children: [
+          TextField(
+            decoration: const InputDecoration(hintText: 'Enter email here'),
+            enableSuggestions: false, // no suggestions above keyboard
+            autocorrect: false, // no autocorrection while typing
+            keyboardType: TextInputType.emailAddress,
+            controller: _email,
           ),
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.done:
-                return Column(
-                  children: [
-                    TextField(
-                      decoration:
-                          const InputDecoration(hintText: 'Enter email here'),
-                      enableSuggestions: false, // no suggestions above keyboard
-                      autocorrect: false, // no autocorrection while typing
-                      keyboardType: TextInputType.emailAddress,
-                      controller: _email,
-                    ),
-                    TextField(
-                      decoration: const InputDecoration(
-                          hintText: 'Enter password here'),
-                      obscureText: true, // replace input with asteriks'
-                      enableSuggestions: false,
-                      autocorrect: false,
-                      controller: _password,
-                    ),
-                    TextButton(
-                      child: const Text('Register'),
-                      onPressed: () async {
-                        final email = _email.text;
-                        final password = _password.text;
-                        try {
-                          final userCredential = await FirebaseAuth.instance
-                              .createUserWithEmailAndPassword(
-                                  email: email, password: password);
-                          print(userCredential);
-                        } on FirebaseException catch (e) {
-                          print(e);
-                          if (e.code == 'email-already-in-use') {
-                            print('hello');
-                          } else if (e.code == 'weak-password') {
-                            print('Try a more complex password');
-                          } else if (e.code == 'invalid-email') {
-                            print('Invalid email entered');
-                          }
-                        }
-                      },
-                    ),
-                  ],
-                );
-              default:
-                return const Text('Loading');
-            }
-          }),
+          TextField(
+            decoration: const InputDecoration(hintText: 'Enter password here'),
+            obscureText: true, // replace input with asteriks'
+            enableSuggestions: false,
+            autocorrect: false,
+            controller: _password,
+          ),
+          TextButton(
+            child: const Text('Register'),
+            onPressed: () async {
+              final email = _email.text;
+              final password = _password.text;
+              try {
+                final userCredential = await FirebaseAuth.instance
+                    .createUserWithEmailAndPassword(
+                        email: email, password: password);
+                print(userCredential);
+              } on FirebaseException catch (e) {
+                print(e);
+                if (e.code == 'email-already-in-use') {
+                  print('hello');
+                } else if (e.code == 'weak-password') {
+                  print('Try a more complex password');
+                } else if (e.code == 'invalid-email') {
+                  print('Invalid email entered');
+                }
+              }
+            },
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil('/login', (route) => false);
+            },
+            child: const Text('Already registered? Log in here!'),
+          )
+        ],
+      ),
     );
   }
 }

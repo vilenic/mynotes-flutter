@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "828754608326",
+    "project_id": "mynotes-vilenic",
+    "storage_bucket": "mynotes-vilenic.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:828754608326:android:cffd98e8e894c66ce5d7c7",
+        "android_client_info": {
+          "package_name": "com.vilenic.mynotes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "828754608326-c60kro383739qfe7vtjlb56d4iq4itfo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKSKJx1k-ePlYg2msiCL_d8GqDKTbDl2E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "828754608326-c60kro383739qfe7vtjlb56d4iq4itfo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -75,7 +75,6 @@ class _LoginViewState extends State<LoginView> {
                     context,
                     'User not found',
                   );
-                  devtools.log('user not found!');
                 } else if (e.code == 'wrong-password') {
                   await showErrorDialog(
                     context,

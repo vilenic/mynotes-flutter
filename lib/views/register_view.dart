@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer' as devtools show log;
 
 import 'package:mynotes/constants/routes.dart';
 import 'package:mynotes/utilities/show_error_dialog.dart';
@@ -57,24 +56,47 @@ class _RegisterViewState extends State<RegisterView> {
             onPressed: () async {
               final email = _email.text;
               final password = _password.text;
+              final navigator = Navigator.of(context);
               if (email.isEmpty || password.isEmpty) {
                 await showErrorDialog(context, 'Please fill in all fields!');
                 return;
               }
               try {
-                final userCredential = await FirebaseAuth.instance
-                    .createUserWithEmailAndPassword(
-                        email: email, password: password);
-                devtools.log(userCredential.toString());
+                await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                  email: email,
+                  password: password,
+                );
+                final user = FirebaseAuth.instance.currentUser;
+                await user
+                    ?.sendEmailVerification(); // Automatically send verification email
+                navigator.pushNamed(verifyEmailRoute);
               } on FirebaseException catch (e) {
-                devtools.log(e.toString());
                 if (e.code == 'email-already-in-use') {
-                  devtools.log('hello');
+                  await showErrorDialog(
+                    context,
+                    'Email is already in use',
+                  );
                 } else if (e.code == 'weak-password') {
-                  devtools.log('Try a more complex password');
+                  await showErrorDialog(
+                    context,
+                    'Password is too simple',
+                  );
                 } else if (e.code == 'invalid-email') {
-                  devtools.log('Invalid email entered');
+                  await showErrorDialog(
+                    context,
+                    'Email is invalid',
+                  );
+                } else {
+                  await showErrorDialog(
+                    context,
+                    'Error: ${e.code}',
+                  );
                 }
+              } catch (e) {
+                await showErrorDialog(
+                  context,
+                  'Error: ${e.toString()}',
+                );
               }
             },
           ),

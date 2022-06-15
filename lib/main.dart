@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mynotes/constants/routes.dart';
-// import 'dart:developer' as devtools show log;
 
 import 'package:mynotes/services/auth/auth_service.dart';
 import 'package:mynotes/views/login_view.dart';

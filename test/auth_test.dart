@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:mynotes/services/auth/auth_exceptions.dart';
 import 'package:mynotes/services/auth/auth_provider.dart';
 import 'package:mynotes/services/auth/auth_user.dart';
@@ -56,8 +54,9 @@ void main() {
       provider.sendEmailVerification();
       final user = provider.currentUser;
       expect(user, isNotNull);
-      expect(user!.isEmailVerified,
-          true); // Force unwrapping with !. because we know that it is not null (previous test confitms it)
+
+      // Force unwrapping with !. because we know that it is not null (previous test confitms it)
+      expect(user!.isEmailVerified, true);
     });
     test('Should be able to log out and log in again', () async {
       await provider.logOut();

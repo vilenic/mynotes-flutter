@@ -48,7 +48,10 @@ class NotesListView extends StatelessWidget {
               },
               icon: Transform.scale(
                 scale: 0.8,
-                child: const Icon(Icons.delete),
+                child: const Icon(
+                  Icons.delete,
+                  color: Colors.amber,
+                ),
               ),
             ),
             onTap: () {

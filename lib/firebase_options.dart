@@ -63,7 +63,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '828754608326',
     projectId: 'mynotes-vilenic',
     storageBucket: 'mynotes-vilenic.appspot.com',
-    iosClientId: '828754608326-00ufgau9ptpqtj6bj6koaln1eufggjc1.apps.googleusercontent.com',
+    iosClientId:
+        '828754608326-00ufgau9ptpqtj6bj6koaln1eufggjc1.apps.googleusercontent.com',
     iosBundleId: 'com.vilenic.mynotes',
   );
 }

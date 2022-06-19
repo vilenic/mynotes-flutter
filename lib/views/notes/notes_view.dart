@@ -16,7 +16,7 @@ class NotesView extends StatefulWidget {
 
 class _NotesViewState extends State<NotesView> {
   late final NotesService _notesService;
-  String get userEmail => AuthService.firebase().currentUser!.email!;
+  String get userEmail => AuthService.firebase().currentUser!.email;
 
   @override
   void initState() {
@@ -28,9 +28,16 @@ class _NotesViewState extends State<NotesView> {
   @override
   Widget build(BuildContext context) {
     final authService = AuthService.firebase();
+    final currentUser = authService.currentUser;
+    String titleText = '';
+    if (currentUser != null) {
+      titleText = '${currentUser.email.split('@')[0]} notes';
+    } else {
+      titleText = 'Your notes';
+    }
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Your Notes'),
+          title: Text(titleText),
           actions: [
             IconButton(
               onPressed: () {
@@ -38,25 +45,29 @@ class _NotesViewState extends State<NotesView> {
               },
               icon: const Icon(Icons.add),
             ),
-            PopupMenuButton<MenuAction>(onSelected: (value) async {
-              switch (value) {
-                case MenuAction.logout:
-                  final navigator = Navigator.of(context);
-                  final shouldLogout = await showLogOutDialog(context);
-                  if (shouldLogout) {
-                    await authService.logOut();
-                    navigator.pushNamedAndRemoveUntil(
-                      loginRoute,
-                      (_) => false,
-                    );
-                  }
-                  break;
-              }
-            }, itemBuilder: (context) {
-              return const [
-                PopupMenuItem(value: MenuAction.logout, child: Text('Log out'))
-              ];
-            })
+            PopupMenuButton<MenuAction>(
+              onSelected: (value) async {
+                switch (value) {
+                  case MenuAction.logout:
+                    final navigator = Navigator.of(context);
+                    final shouldLogout = await showLogOutDialog(context);
+                    if (shouldLogout) {
+                      await authService.logOut();
+                      navigator.pushNamedAndRemoveUntil(
+                        loginRoute,
+                        (_) => false,
+                      );
+                    }
+                    break;
+                }
+              },
+              itemBuilder: (context) {
+                return const [
+                  PopupMenuItem(
+                      value: MenuAction.logout, child: Text('Log out'))
+                ];
+              },
+            )
           ],
         ),
         body: FutureBuilder(

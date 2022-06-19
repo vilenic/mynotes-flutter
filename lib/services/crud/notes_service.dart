@@ -34,7 +34,7 @@ class NotesService {
         if (currentUser != null) {
           return note.userId == currentUser.id;
         } else {
-          throw UserShouldBeSetBeroreReadingAllNotes();
+          throw UserShouldBeSetBeroreReadingAllNotesException();
         }
       });
 
@@ -48,7 +48,7 @@ class NotesService {
         _user = user;
       }
       return user;
-    } on CouldNotFindUser {
+    } on CouldNotFindUserException {
       final createdUser = await createUser(email: email);
       _user = createdUser;
       return createdUser;
@@ -83,7 +83,7 @@ class NotesService {
       whereArgs: [note.id],
     );
     if (updatesCount == 0) {
-      throw CouldNotUpdateNote();
+      throw CouldNotUpdateNoteException();
     }
     final updatedNote = await getNote(id: note.id);
     _notes.removeWhere((note) => note.id == updatedNote.id);
@@ -111,7 +111,7 @@ class NotesService {
       whereArgs: [id],
     );
     if (notes.isEmpty) {
-      throw CouldNotFindNote();
+      throw CouldNotFindNoteException();
     }
     final noteFromDb = DatabaseNote.fromRow(notes.first);
     _notes.removeWhere((note) => note.id == noteFromDb.id);
@@ -137,7 +137,7 @@ class NotesService {
       id,
     ]);
     if (deletedCount == 0) {
-      throw CouldNotDeleteNote();
+      throw CouldNotDeleteNoteException();
     }
     _notes.removeWhere((note) => note.id == id);
     _notesStreamController.add(_notes);
@@ -150,7 +150,7 @@ class NotesService {
     // Make sure owner exists in the db with correct id
     final dbUser = await getUser(email: owner.email);
     if (dbUser != owner) {
-      throw CouldNotFindUser();
+      throw CouldNotFindUserException();
     }
     const text = '';
 
@@ -182,7 +182,7 @@ class NotesService {
       whereArgs: [email.toLowerCase()],
     );
     if (results.isEmpty) {
-      throw CouldNotFindUser();
+      throw CouldNotFindUserException();
     }
     return DatabaseUser.fromRow(results.first);
   }
@@ -197,7 +197,7 @@ class NotesService {
       whereArgs: [email.toLowerCase()],
     );
     if (results.isNotEmpty) {
-      throw UserAlreadyExists();
+      throw UserAlreadyExistsException();
     }
     final userId = await db.insert(
       userTable,
@@ -215,7 +215,7 @@ class NotesService {
       whereArgs: [email.toLowerCase()],
     );
     if (deletedCount != 1) {
-      throw CouldNotDeleteUser;
+      throw CouldNotDeleteUserException;
     }
   }
 

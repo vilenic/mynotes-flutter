@@ -3,10 +3,12 @@ import 'package:flutter/foundation.dart';
 
 @immutable // No fields will change after initialization
 class AuthUser {
-  final String? email;
+  final String id;
+  final String email;
   final bool isEmailVerified;
 
   const AuthUser({
+    required this.id,
     required this.email,
     required this.isEmailVerified,
   });
@@ -14,7 +16,8 @@ class AuthUser {
   // Takes a Firebase User instance and constructs an AuthUser
   // with emailVerified status from Firebase User
   factory AuthUser.fromFirebase(firebase.User user) => AuthUser(
-        email: user.email,
+        id: user.uid,
+        email: user.email!,
         isEmailVerified: user.emailVerified,
       );
 }

@@ -6,23 +6,28 @@ import 'package:mynotes/services/cloud/cloud_storage_exceptions.dart';
 class FirebaseCloudStorage {
   final notes = FirebaseFirestore.instance.collection(notesCollectionName);
 
-  Stream<Iterable<CloudNote>> allNotes({required String ownerUserId}) =>
-      notes.snapshots().map(
-            (event) => event.docs
-                .map((doc) => CloudNote.fromSnapshot(doc))
-                .where((note) => note.ownerUserId == ownerUserId),
-          );
+  Stream<Iterable<CloudNote>> allNotes({required String ownerUserId}) => notes.snapshots().map(
+        (event) => event.docs
+            .map((doc) => CloudNote.fromSnapshot(doc))
+            .where((note) => note.ownerUserId == ownerUserId),
+      );
 
-  static final FirebaseCloudStorage _shared =
-      FirebaseCloudStorage._sharedInstance();
+  static final FirebaseCloudStorage _shared = FirebaseCloudStorage._sharedInstance();
+
   FirebaseCloudStorage._sharedInstance();
   factory FirebaseCloudStorage() => _shared;
 
-  void createNewNote({required String ownerUserId}) async {
-    await notes.add({
+  Future<CloudNote> createNewNote({required String ownerUserId}) async {
+    final document = await notes.add({
       ownerUserIdFieldName: ownerUserId,
       textFieldName: '',
     });
+    final fetchedNote = await document.get();
+    return CloudNote(
+      documentId: fetchedNote.id,
+      ownerUserId: ownerUserId,
+      text: '',
+    );
   }
 
   Future<void> updateNote({
@@ -44,7 +49,9 @@ class FirebaseCloudStorage {
     }
   }
 
-  Future<Iterable<CloudNote>> getNotes({required ownerUserId}) async {
+  Future<Iterable<CloudNote>> getNotes({
+    required ownerUserId,
+  }) async {
     try {
       return await notes
           .where(
@@ -53,15 +60,7 @@ class FirebaseCloudStorage {
           )
           .get()
           .then(
-            (value) => value.docs.map(
-              (doc) {
-                return CloudNote(
-                  documentId: doc.id,
-                  ownerUserId: doc.data()[ownerUserIdFieldName],
-                  text: doc.data()[textFieldName] as String,
-                );
-              },
-            ),
+            (value) => value.docs.map((doc) => CloudNote.fromSnapshot(doc)),
           );
     } catch (e) {
       throw CouldNotGetAllNotesException();

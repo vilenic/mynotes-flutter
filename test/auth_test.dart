@@ -10,8 +10,7 @@ void main() {
       expect(provider.isInitialized, false);
     });
     test('Can not log out if not initialized', () {
-      expect(provider.logOut(),
-          throwsA(const TypeMatcher<NotInitializedException>()));
+      expect(provider.logOut(), throwsA(const TypeMatcher<NotInitializedException>()));
     });
     test('Should be able to initialize', () async {
       await provider.initialize();
@@ -33,15 +32,13 @@ void main() {
         email: 'foo@bar.com',
         password: '123123',
       );
-      expect(badEmailUser,
-          throwsA(const TypeMatcher<UserNotFoundAuthException>()));
+      expect(badEmailUser, throwsA(const TypeMatcher<UserNotFoundAuthException>()));
 
       final badPasswordUser = provider.createUser(
         email: 'a@a.com',
         password: 'foobar',
       );
-      expect(badPasswordUser,
-          throwsA(const TypeMatcher<WrongPasswordAuthException>()));
+      expect(badPasswordUser, throwsA(const TypeMatcher<WrongPasswordAuthException>()));
 
       final user = await provider.createUser(
         email: 'foo',
@@ -133,5 +130,10 @@ class MockAuthProvider implements AuthProvider {
       email: 'foo@bar.com',
     );
     _user = newUser;
+  }
+
+  @override
+  Future<void> sendPasswordReset({required String toEmail}) {
+    throw UnimplementedError();
   }
 }
